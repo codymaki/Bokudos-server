@@ -6,7 +6,7 @@ This project is containerized using Docker.
 The framework is Java Spring Boot and the database is MySQL.
 
 Swagger documentation is enabled for an easy UI over the API.
-Open a browser to 'http://localhost:8082' while the API is running with Docker.
+Open a browser to 'http://localhost:8082/api/swagger-ui.html' while the API is running with Docker.
 
 ## Running the API
 

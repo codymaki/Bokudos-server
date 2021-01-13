@@ -18,3 +18,7 @@ spring:
   config:
     activate:
       on-profile: local
+api:
+  url:
+    games:
+      v1: http://localhost:${server.port}/api/v1/games
