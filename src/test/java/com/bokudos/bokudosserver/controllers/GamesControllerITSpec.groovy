@@ -5,7 +5,7 @@ import com.bokudos.bokudosserver.data.Game
 import com.bokudos.bokudosserver.data.GameStatus
 import com.bokudos.bokudosserver.utils.IntegrationTestUtilities
 import org.apache.http.HttpResponse
-import org.apache.http.client.methods.HttpGet
+import org.apache.http.client.methods.HttpPost
 import org.apache.http.client.methods.HttpUriRequest
 import org.apache.http.impl.client.HttpClientBuilder
 import org.junit.experimental.categories.Category
@@ -21,9 +21,9 @@ class GamesControllerITSpec extends Specification {
     @Value('${api.url.games.v1}')
     private String gamesEndpoint;
 
-    def "get game"() {
+    def "post game"() {
         given:
-        HttpUriRequest request = new HttpGet(gamesEndpoint)
+        HttpUriRequest request = new HttpPost(gamesEndpoint)
 
         when:
         HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request)

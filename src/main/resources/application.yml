@@ -8,13 +8,22 @@ server:
   servlet:
     context-path: /api
 spring:
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+#  autoconfigure:
+#    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  jpa:
+#    generate-ddl: false
+#    database-platform: org.hibernate.dialect.MySQL5Dialect
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    generate-ddl: false
-    database-platform: org.hibernate.dialect.MySQL5Dialect
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    jpa:
+      database-platform: org.hibernate.dialect.H2Dialect
+      generate-ddl: true
+    h2:
+      console:
+        enabled: true
   config:
     activate:
       on-profile: local
