@@ -1,6 +1,6 @@
 package com.bokudos.bokudosserver.sockets;
 
-import com.bokudos.bokudosserver.dtos.Message;
+import com.bokudos.bokudosserver.dtos.PlayerPacketDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class GameWebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        Message messageObject = objectMapper.readValue(message.getPayload(), Message.class);
+        PlayerPacketDTO messageObject = objectMapper.readValue(message.getPayload(), PlayerPacketDTO.class);
         log.info("Message received: " + messageObject);
         for(WebSocketSession webSocketSession: webSocketSessions) {
             webSocketSession.sendMessage(message);

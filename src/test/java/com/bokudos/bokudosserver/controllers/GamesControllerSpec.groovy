@@ -1,6 +1,7 @@
 package com.bokudos.bokudosserver.controllers
 
 import com.bokudos.bokudosserver.categories.UnitTest
+import com.bokudos.bokudosserver.dtos.GameDTO
 import com.bokudos.bokudosserver.entities.Game
 import com.bokudos.bokudosserver.enums.GameStatus
 import com.bokudos.bokudosserver.services.GamesService
@@ -27,7 +28,7 @@ class GamesControllerSpec extends Specification {
         ResponseEntity<List<Game>> responseEntity = gamesController.getGames()
 
         then:
-        1 * gamesService.getGames() >> games
+        1 * gamesService.getGameDTOs() >> games
         0 * _
 
         and:
@@ -37,13 +38,13 @@ class GamesControllerSpec extends Specification {
     def "GetGame"() {
         given:
         UUID gameId = UUID.randomUUID()
-        Game game = new Game(gameId: gameId, gameStatus: GameStatus.CREATING)
+        GameDTO game = new GameDTO(gameId: gameId, gameStatus: GameStatus.CREATING)
 
         when:
-        ResponseEntity<Game> responseEntity = gamesController.getGame(gameId)
+        ResponseEntity<GameDTO> responseEntity = gamesController.getGame(gameId)
 
         then:
-        1 * gamesService.getGameById(gameId) >> Optional.of(game)
+        1 * gamesService.getGameDTOById(gameId) >> game
         0 * _
 
         and:
@@ -52,29 +53,30 @@ class GamesControllerSpec extends Specification {
 
     def "AddGame"() {
         given:
-        Game game = new Game(gameId: UUID.randomUUID(), gameStatus: GameStatus.CREATING)
+        GameDTO game = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.CREATING)
+        GameDTO addedGame = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.CREATING)
 
         when:
-        ResponseEntity<Game> entityResponse = gamesController.addGame()
+        ResponseEntity<GameDTO> entityResponse = gamesController.addGame(game)
 
         then:
-        1 * gamesService.addGame() >> Optional.of(game)
+        1 * gamesService.addGame(game) >> addedGame
         0 * _
 
         and:
-        entityResponse.getBody() == game
+        entityResponse.getBody() == addedGame
     }
 
     def "UpdateGame"() {
         given:
-        Game game = new Game(gameId: UUID.randomUUID(), gameStatus: GameStatus.CREATING)
-        Game updatedGame = new Game(gameId: UUID.randomUUID(), gameStatus: GameStatus.CREATING)
+        GameDTO game = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.CREATING)
+        GameDTO updatedGame = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.CREATING)
 
         when:
-        ResponseEntity<Game> responseEntity = gamesController.updateGame(game)
+        ResponseEntity<GameDTO> responseEntity = gamesController.updateGame(game)
 
         then:
-        1 * gamesService.updateGame(game) >> Optional.of(updatedGame)
+        1 * gamesService.updateGame(game) >> updatedGame
         0 * _
 
         and:

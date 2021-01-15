@@ -1,6 +1,6 @@
 package com.bokudos.bokudosserver.controllers;
 
-import com.bokudos.bokudosserver.entities.Game;
+import com.bokudos.bokudosserver.dtos.GameDTO;
 import com.bokudos.bokudosserver.services.GamesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,30 +36,30 @@ public class GamesController {
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<List<Game>> getGames() {
-        return ResponseEntity.ok(gamesService.getGames());
+    public ResponseEntity<List<GameDTO>> getGames() {
+        return ResponseEntity.ok(gamesService.getGameDTOs());
     }
 
     @GetMapping(
             path = "/{gameId}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Game> getGame(@PathVariable(name = "gameId") UUID gameId) {
-        return ResponseEntity.of(gamesService.getGameById(gameId));
+    public ResponseEntity<GameDTO> getGame(@PathVariable(name = "gameId") UUID gameId) {
+        return ResponseEntity.ok(gamesService.getGameDTOById(gameId));
     }
 
     @PostMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Game> addGame() {
-        return ResponseEntity.of(gamesService.addGame());
+    public ResponseEntity<GameDTO> addGame(@Valid @RequestBody GameDTO gameDTO) {
+        return ResponseEntity.ok(gamesService.addGame(gameDTO));
     }
 
     @PutMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<Game> updateGame(@Valid @RequestBody Game game) {
-        return ResponseEntity.of(gamesService.updateGame(game));
+    public ResponseEntity<GameDTO> updateGame(@Valid @RequestBody GameDTO gameDTO) {
+        return ResponseEntity.ok(gamesService.updateGame(gameDTO));
     }
 
     @DeleteMapping(

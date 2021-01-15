@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class Message {
-    private String from;
-    private String text;
+public class GamePacketDTO {
+
+    private UUID gameId;
 }

@@ -5,6 +5,8 @@ import com.bokudos.bokudosserver.entities.Game;
 import com.bokudos.bokudosserver.entities.Player;
 import com.bokudos.bokudosserver.enums.GameStatus;
 import com.bokudos.bokudosserver.exceptions.InvalidGameStatusException;
+import com.bokudos.bokudosserver.exceptions.PlayerNotFoundException;
+import com.bokudos.bokudosserver.mappers.PlayerMapper;
 import com.bokudos.bokudosserver.repositories.PlayersRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +27,18 @@ public class PlayersService {
     private GamesService gamesService;
 
     public List<PlayerDTO> getPlayersByGameId(UUID gameId) {
-        Game game = gamesService.getGameById(gameId).orElseThrow();
+        Game game = gamesService.getGameById(gameId);
         return StreamSupport
                 .stream(playersRepository.findAllByGame(game).spliterator(), false)
-                .map(this::mapToDTO)
+                .map(PlayerMapper::mapToDTO)
                 .collect(Collectors.toList());
     }
 
     public PlayerDTO getPlayerById(UUID gameId, UUID playerId) {
-        gamesService.getGameById(gameId).orElseThrow();
-        Player player = playersRepository.findById(playerId).orElseThrow();
-        return mapToDTO(player);
+        gamesService.getGameDTOById(gameId);
+        Player player = playersRepository.findById(playerId)
+                .orElseThrow(PlayerNotFoundException::new);
+        return PlayerMapper.mapToDTO(player);
     }
 
     public PlayerDTO addPlayer(UUID gameId, PlayerDTO player) {
@@ -47,26 +50,19 @@ public class PlayersService {
     }
 
     private PlayerDTO savePlayer(UUID gameId, PlayerDTO playerDTO) {
-        Game game = gamesService.getGameById(gameId).orElseThrow();
+        Game game = gamesService.getGameById(gameId);
         if(game.getGameStatus() != GameStatus.CREATING) {
             throw new InvalidGameStatusException();
         }
-        Player player = mapFromDTO(playerDTO);
+        Player player = PlayerMapper.mapFromDTO(playerDTO);
         player.setGame(game);
-        return mapToDTO(playersRepository.save(player));
+        return PlayerMapper.mapToDTO(playersRepository.save(player));
     }
 
     public void deletePlayer(UUID gameId, UUID playerId) {
-        gamesService.getGameById(gameId).orElseThrow();
-        Player player = playersRepository.findById(playerId).orElseThrow();
+        gamesService.getGameById(gameId);
+        Player player = playersRepository.findById(playerId)
+                .orElseThrow(PlayerNotFoundException::new);
         playersRepository.delete(player);
-    }
-
-    public Player mapFromDTO(PlayerDTO playerDTO) {
-        return Player.builder().playerId(playerDTO.getPlayerId()).name(playerDTO.getName()).build();
-    }
-
-    public PlayerDTO mapToDTO(Player player) {
-        return PlayerDTO.builder().playerId(player.getPlayerId()).name(player.getName()).build();
     }
 }

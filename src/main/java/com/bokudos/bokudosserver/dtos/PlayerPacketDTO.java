@@ -5,12 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class OutputMessage {
-    private String from;
-    private String text;
-    private String time;
+public class PlayerPacketDTO {
+
+    private UUID playerId;
 }
