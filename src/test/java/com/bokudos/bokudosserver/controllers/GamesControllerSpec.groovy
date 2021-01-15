@@ -1,8 +1,8 @@
 package com.bokudos.bokudosserver.controllers
 
 import com.bokudos.bokudosserver.categories.UnitTest
-import com.bokudos.bokudosserver.data.Game
-import com.bokudos.bokudosserver.data.GameStatus
+import com.bokudos.bokudosserver.entities.Game
+import com.bokudos.bokudosserver.enums.GameStatus
 import com.bokudos.bokudosserver.services.GamesService
 import org.junit.experimental.categories.Category
 import org.springframework.http.ResponseEntity
@@ -20,7 +20,7 @@ class GamesControllerSpec extends Specification {
 
     def "GetGames"() {
         given:
-        Game expectedResponse = new Game(UUID.randomUUID(), GameStatus.CREATING)
+        Game expectedResponse = Game.builder().gameId(UUID.randomUUID()).gameStatus(GameStatus.CREATING).build()
 
         when:
         ResponseEntity<Game> responseEntity = gamesController.getGame()

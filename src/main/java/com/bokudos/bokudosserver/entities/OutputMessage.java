@@ -1,4 +1,4 @@
-package com.bokudos.bokudosserver.data;
+package com.bokudos.bokudosserver.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class Message {
+public class OutputMessage {
     private String from;
     private String text;
+    private String time;
 }

@@ -1,6 +1,6 @@
 package com.bokudos.bokudosserver.controllers;
 
-import com.bokudos.bokudosserver.data.Game;
+import com.bokudos.bokudosserver.entities.Game;
 import com.bokudos.bokudosserver.services.GamesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

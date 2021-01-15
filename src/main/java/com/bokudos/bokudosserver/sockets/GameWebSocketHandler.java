@@ -1,6 +1,6 @@
 package com.bokudos.bokudosserver.sockets;
 
-import com.bokudos.bokudosserver.data.Message;
+import com.bokudos.bokudosserver.entities.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class ChatWebSocketHandler extends AbstractWebSocketHandler {
+public class GameWebSocketHandler extends AbstractWebSocketHandler {
 
     private final List<WebSocketSession> webSocketSessions = new ArrayList<>();
 

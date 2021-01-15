@@ -1,8 +1,8 @@
 package com.bokudos.bokudosserver.services;
 
-import com.bokudos.bokudosserver.data.Game;
-import com.bokudos.bokudosserver.data.GameStatus;
-import com.bokudos.bokudosserver.repos.GamesRepository;
+import com.bokudos.bokudosserver.entities.Game;
+import com.bokudos.bokudosserver.enums.GameStatus;
+import com.bokudos.bokudosserver.repositories.GamesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,10 @@ public class GamesService {
     }
 
     public Optional<Game> addGame() {
-        Game game = new Game(UUID.randomUUID(), GameStatus.CREATING);
+        Game game = Game.builder()
+                .gameId(UUID.randomUUID())
+                .gameStatus(GameStatus.CREATING)
+                .build();
         return saveGame(game);
     }
 
@@ -45,6 +48,6 @@ public class GamesService {
 
     public void deleteGame(UUID gameId) {
         Optional<Game> game = getGameById(gameId);
-        gamesRepository.delete(game.get());
+        game.ifPresent(value -> gamesRepository.delete(value));
     }
 }

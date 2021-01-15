@@ -1,4 +1,4 @@
-package com.bokudos.bokudosserver.utils;
+package com.bokudos.bokudosserver.utilities;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

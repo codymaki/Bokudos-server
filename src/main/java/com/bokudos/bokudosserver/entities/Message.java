@@ -1,18 +1,15 @@
-package com.bokudos.bokudosserver.data;
+package com.bokudos.bokudosserver.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class Player {
-
-    private UUID playerId;
-
+public class Message {
+    private String from;
+    private String text;
 }

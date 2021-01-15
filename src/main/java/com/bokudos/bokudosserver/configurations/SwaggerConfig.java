@@ -1,4 +1,4 @@
-package com.bokudos.bokudosserver.configuration;
+package com.bokudos.bokudosserver.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

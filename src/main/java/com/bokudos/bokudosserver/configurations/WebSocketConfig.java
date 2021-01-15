@@ -1,6 +1,6 @@
-package com.bokudos.bokudosserver.configuration;
+package com.bokudos.bokudosserver.configurations;
 
-import com.bokudos.bokudosserver.sockets.ChatWebSocketHandler;
+import com.bokudos.bokudosserver.sockets.GameWebSocketHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;
@@ -16,23 +16,12 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
-        webSocketHandlerRegistry.addHandler(getChatWebSocketHandler(), ENDPOINT)
+        webSocketHandlerRegistry.addHandler(getGameWebSocketHandler(), ENDPOINT)
                 .setAllowedOrigins("*");
     }
 
     @Bean
-    public WebSocketHandler getChatWebSocketHandler() {
-        return new ChatWebSocketHandler();
+    public WebSocketHandler getGameWebSocketHandler() {
+        return new GameWebSocketHandler();
     }
-
-//    public void configureMessageBroker(MessageBrokerRegistry config) {
-//        config.enableSimpleBroker("/topic");
-//        config.setApplicationDestinationPrefixes("/app");
-//    }
-//
-//
-//    public void registerStompEndpoints(StompEndpointRegistry registry) {
-//        registry.addEndpoint("/chat");
-//        registry.addEndpoint("/chat").withSockJS();
-//    }
 }

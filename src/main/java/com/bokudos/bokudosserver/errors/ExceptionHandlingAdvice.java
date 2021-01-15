@@ -1,6 +1,6 @@
 package com.bokudos.bokudosserver.errors;
 
-import com.bokudos.bokudosserver.data.ErrorMessage;
+import com.bokudos.bokudosserver.entities.ErrorMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

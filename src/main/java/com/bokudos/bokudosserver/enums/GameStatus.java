@@ -1,4 +1,4 @@
-package com.bokudos.bokudosserver.data;
+package com.bokudos.bokudosserver.enums;
 
 public enum GameStatus {
     CREATING,
