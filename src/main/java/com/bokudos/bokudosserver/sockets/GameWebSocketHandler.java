@@ -1,6 +1,6 @@
 package com.bokudos.bokudosserver.sockets;
 
-import com.bokudos.bokudosserver.entities.Message;
+import com.bokudos.bokudosserver.dtos.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

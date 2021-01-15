@@ -1,4 +1,4 @@
-package com.bokudos.bokudosserver.entities;
+package com.bokudos.bokudosserver.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

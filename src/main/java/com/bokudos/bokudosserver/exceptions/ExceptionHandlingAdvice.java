@@ -1,6 +1,7 @@
-package com.bokudos.bokudosserver.errors;
+package com.bokudos.bokudosserver.exceptions;
 
-import com.bokudos.bokudosserver.entities.ErrorMessage;
+import com.bokudos.bokudosserver.constants.ErrorMessageConstants;
+import com.bokudos.bokudosserver.dtos.ErrorMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -18,6 +20,12 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 @Slf4j
 public class ExceptionHandlingAdvice extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(GenericException.class)
+    public ResponseEntity<ErrorMessage> handleGenericException(GenericException ex) {
+        String message = ex.getMessage().isBlank() ? ErrorMessageConstants.INVALID_REQUEST_MESSAGE : ex.getMessage();
+        return new ResponseEntity<>(new ErrorMessage(message), HttpStatus.BAD_REQUEST);
+    }
 
     @Override
     public final ResponseEntity<Object> handleHttpMessageNotReadable(

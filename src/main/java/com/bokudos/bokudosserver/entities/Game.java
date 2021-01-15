@@ -10,12 +10,11 @@ import lombok.NonNull;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,11 +33,4 @@ public class Game {
     @Enumerated(EnumType.STRING)
     private GameStatus gameStatus;
 
-    @OneToMany
-    @JoinColumn(name = "playerId")
-    private List<Player> players;
-
-    @OneToMany
-    @JoinColumn(name = "enemyId")
-    private List<Enemy> enemies;
 }

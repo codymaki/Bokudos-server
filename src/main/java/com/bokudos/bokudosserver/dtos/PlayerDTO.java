@@ -1,4 +1,4 @@
-package com.bokudos.bokudosserver.entities;
+package com.bokudos.bokudosserver.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,10 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -18,18 +14,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Builder
-@Entity
-public class Player extends AbstractObject {
-
-    @Id
+public class PlayerDTO {
     @NotNull
     private UUID playerId;
 
     @NonNull
     @Length(max = 20)
     private String name;
-
-    @OneToOne
-    @JoinColumn(name = "gameId")
-    private Game game;
 }
