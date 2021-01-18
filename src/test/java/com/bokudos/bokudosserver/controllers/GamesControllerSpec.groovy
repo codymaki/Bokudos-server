@@ -22,7 +22,7 @@ class GamesControllerSpec extends Specification {
 
     def "GetGames"() {
         given:
-        List<Game> games = [new Game(gameId: UUID.randomUUID(), gameStatus: GameStatus.CREATING)]
+        List<Game> games = [new Game(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN)]
 
         when:
         ResponseEntity<List<Game>> responseEntity = gamesController.getGames()
@@ -38,7 +38,7 @@ class GamesControllerSpec extends Specification {
     def "GetGame"() {
         given:
         UUID gameId = UUID.randomUUID()
-        GameDTO game = new GameDTO(gameId: gameId, gameStatus: GameStatus.CREATING)
+        GameDTO game = new GameDTO(gameId: gameId, gameStatus: GameStatus.OPEN)
 
         when:
         ResponseEntity<GameDTO> responseEntity = gamesController.getGame(gameId)
@@ -53,8 +53,8 @@ class GamesControllerSpec extends Specification {
 
     def "AddGame"() {
         given:
-        GameDTO game = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.CREATING)
-        GameDTO addedGame = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.CREATING)
+        GameDTO game = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN)
+        GameDTO addedGame = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN)
 
         when:
         ResponseEntity<GameDTO> entityResponse = gamesController.addGame(game)
@@ -69,8 +69,8 @@ class GamesControllerSpec extends Specification {
 
     def "UpdateGame"() {
         given:
-        GameDTO game = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.CREATING)
-        GameDTO updatedGame = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.CREATING)
+        GameDTO game = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN)
+        GameDTO updatedGame = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN)
 
         when:
         ResponseEntity<GameDTO> responseEntity = gamesController.updateGame(game)

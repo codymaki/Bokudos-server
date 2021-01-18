@@ -41,9 +41,7 @@ public class GamesService {
     }
 
     public GameDTO addGame(GameDTO game) {
-        if(game.getGameStatus() != GameStatus.CREATING) {
-            throw new InvalidGameStatusException();
-        }
+        validateGameStatusOpen(game.getGameStatus());
         return saveGame(game);
     }
 
@@ -59,6 +57,13 @@ public class GamesService {
     public void deleteGame(UUID gameId) {
         Game game = gamesRepository.findById(gameId)
                 .orElseThrow(GameNotFoundException::new);
+        validateGameStatusOpen(game.getGameStatus());
         gamesRepository.delete(game);
+    }
+
+    public void validateGameStatusOpen(GameStatus gameStatus) {
+        if (GameStatus.OPEN != gameStatus) {
+            throw new InvalidGameStatusException();
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.bokudos.bokudosserver.enums;
 
 public enum GameStatus {
-    CREATING,
-    PROGRESS,
-    COMPLETED
+    OPEN,
+    IN_PROGRESS,
+    COMPLETE
 }
