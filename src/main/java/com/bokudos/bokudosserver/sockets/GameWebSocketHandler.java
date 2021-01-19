@@ -79,7 +79,7 @@ public class GameWebSocketHandler extends AbstractWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         PlayerPacketDTO playerPacketDTO = objectMapper.readValue(message.getPayload(), PlayerPacketDTO.class);
-        log.info("Message received: " + playerPacketDTO);
+        log.debug("Message received: " + playerPacketDTO);
 
         UUID gameId = getGameIdFromURI(session.getUri());
         getPlayerPacketQueue(gameId).add(playerPacketDTO);
@@ -92,6 +92,9 @@ public class GameWebSocketHandler extends AbstractWebSocketHandler {
         webSocketSessions.get(gameId).remove(session);
         if (webSocketSessions.get(gameId).size() == 0) {
             gameThreadMap.get(gameId).stopRunning();
+            gameThreadMap.remove(gameId);
+            webSocketSessions.remove(gameId);
+            packetQueueMap.remove(gameId);
         }
     }
 }
