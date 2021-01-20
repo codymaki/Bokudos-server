@@ -4,6 +4,7 @@ import com.bokudos.bokudosserver.constants.ServerConfigurationConstants;
 import com.bokudos.bokudosserver.dtos.GameDTO;
 import com.bokudos.bokudosserver.dtos.PlayerPacketDTO;
 import com.bokudos.bokudosserver.dtos.ServerPacketDTO;
+import com.bokudos.bokudosserver.external.stagebuilder.v1.data.Tiles;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +28,15 @@ public class GameThread extends Thread {
     private List<WebSocketSession> clientSessions;
     private ObjectMapper objectMapper;
     private String lastPacket;
+    private Tiles tiles;
 
-    public GameThread(GameDTO gameDTO, BlockingQueue<PlayerPacketDTO> playerPacketQueue, List<WebSocketSession> clientSessions) {
+    public GameThread(GameDTO gameDTO, BlockingQueue<PlayerPacketDTO> playerPacketQueue, List<WebSocketSession> clientSessions, Tiles tiles) {
         super(null, null, gameDTO.getGameId().toString(), 0);
         this.gameDTO = gameDTO;
         this.playerPacketQueue = playerPacketQueue;
         this.clientSessions = clientSessions;
         this.objectMapper = new ObjectMapper();
+        this.tiles = tiles;
     }
 
     public void stopRunning() {

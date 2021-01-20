@@ -2,6 +2,8 @@ package com.bokudos.bokudosserver.sockets;
 
 import com.bokudos.bokudosserver.dtos.GameDTO;
 import com.bokudos.bokudosserver.dtos.PlayerPacketDTO;
+import com.bokudos.bokudosserver.external.stagebuilder.StageBuilder;
+import com.bokudos.bokudosserver.external.stagebuilder.v1.data.Tiles;
 import com.bokudos.bokudosserver.services.GamesService;
 import com.bokudos.bokudosserver.threads.GameThread;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +37,8 @@ public class GameWebSocketHandler extends AbstractWebSocketHandler {
     ObjectMapper objectMapper;
     @Autowired
     GamesService gamesService;
+    @Autowired
+    StageBuilder stageBuilder;
 
     private UUID getGameIdFromURI(URI uri) {
         String path = uri != null ? uri.getPath() : null;
@@ -61,7 +65,8 @@ public class GameWebSocketHandler extends AbstractWebSocketHandler {
         if (!gameThreadMap.containsKey(gameId)) {
             GameDTO gameDTO = gamesService.getGameDTOById(gameId);
             BlockingQueue<PlayerPacketDTO> packetQueue = getPlayerPacketQueue(gameId);
-            GameThread gameThread = new GameThread(gameDTO, packetQueue, webSocketSessions.get(gameId));
+            Tiles tiles = stageBuilder.getTiles(gameDTO.getStageId());
+            GameThread gameThread = new GameThread(gameDTO, packetQueue, webSocketSessions.get(gameId), tiles);
             gameThreadMap.put(gameId, gameThread);
             gameThread.start();
         }

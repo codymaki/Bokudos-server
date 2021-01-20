@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class StageBuilderProcessor {
+public class StageBuilder {
 
     @Autowired
     private RegionService regionService;
