@@ -24,4 +24,7 @@ public class GameDTO {
     @NonNull
     @Enumerated(EnumType.STRING)
     private GameStatus gameStatus;
+
+    @NonNull
+    private int stageId;
 }

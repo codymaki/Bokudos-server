@@ -2,7 +2,6 @@ package com.bokudos.bokudosserver.controllers
 
 import com.bokudos.bokudosserver.categories.UnitTest
 import com.bokudos.bokudosserver.dtos.GameDTO
-import com.bokudos.bokudosserver.entities.Game
 import com.bokudos.bokudosserver.enums.GameStatus
 import com.bokudos.bokudosserver.services.GamesService
 import org.junit.experimental.categories.Category
@@ -22,10 +21,10 @@ class GamesControllerSpec extends Specification {
 
     def "GetGames"() {
         given:
-        List<Game> games = [new Game(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN)]
+        List<GameDTO> games = [new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN, stageId: 1)]
 
         when:
-        ResponseEntity<List<Game>> responseEntity = gamesController.getGames()
+        ResponseEntity<List<GameDTO>> responseEntity = gamesController.getGames()
 
         then:
         1 * gamesService.getGameDTOs() >> games
@@ -38,7 +37,7 @@ class GamesControllerSpec extends Specification {
     def "GetGame"() {
         given:
         UUID gameId = UUID.randomUUID()
-        GameDTO game = new GameDTO(gameId: gameId, gameStatus: GameStatus.OPEN)
+        GameDTO game = new GameDTO(gameId: gameId, gameStatus: GameStatus.OPEN, stageId: 1)
 
         when:
         ResponseEntity<GameDTO> responseEntity = gamesController.getGame(gameId)
@@ -53,8 +52,8 @@ class GamesControllerSpec extends Specification {
 
     def "AddGame"() {
         given:
-        GameDTO game = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN)
-        GameDTO addedGame = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN)
+        GameDTO game = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN, stageId: 1)
+        GameDTO addedGame = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN, stageId: 1)
 
         when:
         ResponseEntity<GameDTO> entityResponse = gamesController.addGame(game)
@@ -69,8 +68,8 @@ class GamesControllerSpec extends Specification {
 
     def "UpdateGame"() {
         given:
-        GameDTO game = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN)
-        GameDTO updatedGame = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN)
+        GameDTO game = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN, stageId: 1)
+        GameDTO updatedGame = new GameDTO(gameId: UUID.randomUUID(), gameStatus: GameStatus.OPEN, stageId: 1)
 
         when:
         ResponseEntity<GameDTO> responseEntity = gamesController.updateGame(game)
