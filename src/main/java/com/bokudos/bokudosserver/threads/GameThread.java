@@ -42,6 +42,7 @@ public class GameThread extends Thread {
 
     @Override
     public void run() {
+        log.info("Game Thread Started: " + gameDTO.getGameId());
         long timer = System.currentTimeMillis();
 
         while (running) {
