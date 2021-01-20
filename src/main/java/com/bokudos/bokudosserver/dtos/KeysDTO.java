@@ -5,14 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class PlayerPacketDTO {
-
-    private UUID playerId;
-    private KeysDTO keys;
+public class KeysDTO {
+    private boolean up;
+    private boolean down;
+    private boolean left;
+    private boolean right;
+    private boolean attack;
 }
