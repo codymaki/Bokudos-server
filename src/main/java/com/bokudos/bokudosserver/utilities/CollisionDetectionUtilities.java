@@ -39,7 +39,7 @@ public class CollisionDetectionUtilities {
             // if moving to the right, check tiles to the right of the hitbox
             if (velocity.getDx() > 0.0D) {
                 // check the alignment of the box to ensure its in the same vertical space
-                if (hasOverlap(bottomRight.getY(), topLeft.getY(), tile.getY() - TILE_SIZE, tile.getY())) {
+                if (hasOverlap(bottomRight.getY(), topLeft.getY(), tile.getY(), tile.getY() + TILE_SIZE)) {
                     // if the box will be moved beyond the tile boundaries, then update the velocity based off of tile physics
                     if (hasOverlap(bottomRight.getX(), bottomRight.getX() + velocity.getDx(), tile.getX(), tile.getX() + TILE_SIZE)) {
                         modification = (bottomRight.getX() + velocity.getDx() - tile.getX());
@@ -48,7 +48,7 @@ public class CollisionDetectionUtilities {
                 }
             } else if (velocity.getDx() < 0.0D) {
                 // check the alignment of the box to ensure its in the same vertical space
-                if (hasOverlap(bottomRight.getY(), topLeft.getY(), tile.getY() - TILE_SIZE, tile.getY())) {
+                if (hasOverlap(bottomRight.getY(), topLeft.getY(), tile.getY(), tile.getY() + TILE_SIZE)) {
                     // if the box will be moved beyond the tile boundaries, then update the velocity based off of tile physics
                     if (hasOverlap(topLeft.getX() + velocity.getDx(), topLeft.getX(), tile.getX(), tile.getX() + TILE_SIZE)) {
                         modification = (tile.getX() + TILE_SIZE) - (topLeft.getX() + velocity.getDx());
@@ -62,8 +62,8 @@ public class CollisionDetectionUtilities {
                 // check the alignment of the box to ensure its in the same horizontal space
                 if (hasOverlap(topLeft.getX(), bottomRight.getX(), tile.getX(), tile.getX() + TILE_SIZE)) {
                     // if the box will be moved beyond the tile boundaries, then update the velocity based off of tile physics
-                    if (hasOverlap(topLeft.getY(), topLeft.getY() + velocity.getDy(), tile.getY() - TILE_SIZE, tile.getY())) {
-                        modification = topLeft.getY() + velocity.getDy() - (tile.getY() - TILE_SIZE);
+                    if (hasOverlap(topLeft.getY(), topLeft.getY() + velocity.getDy(), tile.getY(), tile.getY() + TILE_SIZE)) {
+                        modification = topLeft.getY() + velocity.getDy() - tile.getY();
                         velocity.setDy(velocity.getDy() - modification);
                     }
                 }
@@ -71,8 +71,8 @@ public class CollisionDetectionUtilities {
                 // check the alignment of the box to ensure its in the same horizontal space
                 if (hasOverlap(topLeft.getX(), bottomRight.getX(), tile.getX(), tile.getX() + TILE_SIZE)) {
                     // if the box will be moved beyond the tile boundaries, then update the velocity based off of tile physics
-                    if (hasOverlap(bottomRight.getY() + velocity.getDy(), bottomRight.getY(), tile.getY() - TILE_SIZE, tile.getY())) {
-                        modification = (tile.getY()) - (bottomRight.getY() + velocity.getDy());
+                    if (hasOverlap(bottomRight.getY() + velocity.getDy(), bottomRight.getY(), tile.getY(), tile.getY() + TILE_SIZE)) {
+                        modification = (tile.getY() + TILE_SIZE) - (bottomRight.getY() + velocity.getDy());
                         velocity.setDy(velocity.getDy() + modification);
 
                         // not sure if this is needed or not
@@ -123,7 +123,7 @@ public class CollisionDetectionUtilities {
         final int left = (int) Math.floor(box.getPosition().getX());
         final int right = (int) Math.floor(box.getPosition().getX() + box.getDimensions().getWidth());
 
-        for (int row = bottom + 1; row <= top + 1; row++) {
+        for (int row = bottom; row <= top + 1; row++) {
             for (int col = left; col <= right; col++) {
                 Boolean tile = tiles.getTile(col, row);
                 if(tile != null && tile) {
