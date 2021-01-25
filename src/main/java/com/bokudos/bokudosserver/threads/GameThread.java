@@ -2,9 +2,12 @@ package com.bokudos.bokudosserver.threads;
 
 import com.bokudos.bokudosserver.constants.ServerConfigurationConstants;
 import com.bokudos.bokudosserver.dtos.GameDTO;
-import com.bokudos.bokudosserver.dtos.PlayerPacketDTO;
-import com.bokudos.bokudosserver.dtos.ServerPacketDTO;
+import com.bokudos.bokudosserver.packets.in.PlayerUpdatePacket;
+import com.bokudos.bokudosserver.packets.out.MovingObject;
+import com.bokudos.bokudosserver.packets.out.ServerUpdatePacket;
 import com.bokudos.bokudosserver.external.stagebuilder.v1.data.Tiles;
+import com.bokudos.bokudosserver.physics.EnemyPhysics;
+import com.bokudos.bokudosserver.physics.PhysicsSettings;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -24,19 +27,23 @@ public class GameThread extends Thread {
 
     private GameDTO gameDTO;
     private boolean running = true;
-    private BlockingQueue<PlayerPacketDTO> playerPacketQueue;
+    private BlockingQueue<PlayerUpdatePacket> playerPacketQueue;
     private List<WebSocketSession> clientSessions;
     private ObjectMapper objectMapper;
     private String lastPacket;
     private Tiles tiles;
+    private Map<UUID, MovingObject> enemies;
+    private PhysicsSettings physicsSettings;
 
-    public GameThread(GameDTO gameDTO, BlockingQueue<PlayerPacketDTO> playerPacketQueue, List<WebSocketSession> clientSessions, Tiles tiles) {
+    public GameThread(GameDTO gameDTO, BlockingQueue<PlayerUpdatePacket> playerPacketQueue, List<WebSocketSession> clientSessions, Tiles tiles) {
         super(null, null, gameDTO.getGameId().toString(), 0);
         this.gameDTO = gameDTO;
         this.playerPacketQueue = playerPacketQueue;
         this.clientSessions = clientSessions;
         this.objectMapper = new ObjectMapper();
         this.tiles = tiles;
+        this.enemies = new HashMap<>();
+        this.physicsSettings = new PhysicsSettings(ServerConfigurationConstants.DEFAULT_SERVER_TICK_RATE);
     }
 
     public void stopRunning() {
@@ -48,12 +55,14 @@ public class GameThread extends Thread {
         log.info("Game Thread Started: " + gameDTO.getGameId());
         long timer = System.currentTimeMillis();
 
+        initEnemies();
+
         while (running) {
-            if (System.currentTimeMillis() - timer > ServerConfigurationConstants.SERVER_DELAY_MS) {
-                List<PlayerPacketDTO> packets = this.popPlayerPackets();
-                ServerPacketDTO serverPacketDTO = this.tickServer(packets);
-                final String serverPacket = writeToJSON(serverPacketDTO);
-                if(serverPacket != null && !serverPacket.equals(lastPacket)) {
+            if (System.currentTimeMillis() - timer > this.physicsSettings.getMsPerTick()) {
+                List<PlayerUpdatePacket> packets = this.popPlayerPackets();
+                ServerUpdatePacket serverUpdatePacket = this.tickServer(packets);
+                final String serverPacket = writeToJSON(serverUpdatePacket);
+                if (serverPacket != null && !serverPacket.equals(lastPacket)) {
                     clientSessions.forEach(webSocketSession -> {
                         try {
                             webSocketSession.sendMessage(new TextMessage(serverPacket));
@@ -63,33 +72,44 @@ public class GameThread extends Thread {
                     });
                     lastPacket = serverPacket;
                 }
-                timer += ServerConfigurationConstants.SERVER_DELAY_MS;
+                timer += this.physicsSettings.getMsPerTick();
             }
         }
         log.info("Game Thread Complete: " + gameDTO.getGameId());
     }
 
-    private String writeToJSON(ServerPacketDTO serverPacketDTO) {
+    private void initEnemies() {
+        this.enemies.put(UUID.randomUUID(), new MovingObject(19.0D, 28.0D, -2.4D, 0.0D, 1.0D, 1.0D));
+//        this.enemies.put(UUID.randomUUID(), new MovingObject(68.0D, 50.0D, 5D, 0.0D, 1.0D, 1.0D));
+//        this.enemies.put(UUID.randomUUID(), new MovingObject(50.0D, 78.0D, -2D, 0.0D, 1.0D, 1.0D));
+    }
+
+    private String writeToJSON(ServerUpdatePacket serverUpdatePacket) {
         try {
-            return objectMapper.writeValueAsString(serverPacketDTO);
+            return objectMapper.writeValueAsString(serverUpdatePacket);
         } catch (JsonProcessingException e) {
             log.error("Failed to build JSON from Server Packet", e);
             return null;
         }
     }
 
-    private ServerPacketDTO tickServer(List<PlayerPacketDTO> packets) {
-        return ServerPacketDTO.builder().gameId(this.gameDTO.getGameId()).build();
+    private ServerUpdatePacket tickServer(List<PlayerUpdatePacket> packets) {
+        enemies.replaceAll((i, v) -> EnemyPhysics.updatePosition(physicsSettings, v, tiles));
+
+        return ServerUpdatePacket.builder()
+                .gameId(gameDTO.getGameId())
+                .enemies(enemies)
+                .build();
     }
 
-    private List<PlayerPacketDTO> popPlayerPackets() {
+    private List<PlayerUpdatePacket> popPlayerPackets() {
         int queueSize = playerPacketQueue.size();
 
-        Map<UUID, PlayerPacketDTO> playerPacketDTOMap = new HashMap<>();
-        for(int i = 0; i< queueSize; i++) {
+        Map<UUID, PlayerUpdatePacket> playerPacketDTOMap = new HashMap<>();
+        for (int i = 0; i < queueSize; i++) {
             try {
-                PlayerPacketDTO playerPacketDTO = playerPacketQueue.take();
-                playerPacketDTOMap.put(playerPacketDTO.getPlayerId(), playerPacketDTO);
+                PlayerUpdatePacket playerUpdatePacket = playerPacketQueue.take();
+                playerPacketDTOMap.put(playerUpdatePacket.getPlayerId(), playerUpdatePacket);
             } catch (InterruptedException ex) {
                 log.error("Error getting player packets", ex);
             }

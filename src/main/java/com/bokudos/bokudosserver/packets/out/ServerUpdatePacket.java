@@ -1,4 +1,4 @@
-package com.bokudos.bokudosserver.dtos;
+package com.bokudos.bokudosserver.packets.out;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +12,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Builder
-public class ServerPacketDTO {
+public class ServerUpdatePacket {
 
     private UUID gameId;
-    private Map<UUID, ObjectDTO> players;
-    private Map<UUID, ObjectDTO> enemies;
+    private Map<UUID, MovingObject> players;
+    private Map<UUID, MovingObject> enemies;
 }

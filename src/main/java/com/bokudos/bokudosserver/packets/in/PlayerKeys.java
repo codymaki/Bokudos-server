@@ -1,4 +1,4 @@
-package com.bokudos.bokudosserver.dtos;
+package com.bokudos.bokudosserver.packets.in;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class KeysDTO {
+public class PlayerKeys {
     private boolean up;
     private boolean down;
     private boolean left;

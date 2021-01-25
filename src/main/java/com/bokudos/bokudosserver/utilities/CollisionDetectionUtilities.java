@@ -1,10 +1,10 @@
 package com.bokudos.bokudosserver.utilities;
 
 import com.bokudos.bokudosserver.external.stagebuilder.v1.data.Tiles;
-import com.bokudos.bokudosserver.physics.Box;
-import com.bokudos.bokudosserver.physics.Dimensions;
-import com.bokudos.bokudosserver.physics.Point;
-import com.bokudos.bokudosserver.physics.Velocity;
+import com.bokudos.bokudosserver.physics.data.Box;
+import com.bokudos.bokudosserver.physics.data.Dimensions;
+import com.bokudos.bokudosserver.physics.data.Point;
+import com.bokudos.bokudosserver.physics.data.Velocity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,9 +76,9 @@ public class CollisionDetectionUtilities {
                         velocity.setDy(velocity.getDy() + modification);
 
                         // not sure if this is needed or not
-//                        if (Math.abs(velocity.getDy()) < 0.00001) {
-//                            velocity.setDy(0.0D);
-//                        }
+                        if (Math.abs(velocity.getDy()) < 0.00001) {
+                            velocity.setDy(0.0D);
+                        }
                     }
                 }
             }
@@ -125,7 +125,8 @@ public class CollisionDetectionUtilities {
 
         for (int row = bottom + 1; row <= top + 1; row++) {
             for (int col = left; col <= right; col++) {
-                if(tiles.getTile(row, col)) {
+                Boolean tile = tiles.getTile(col, row);
+                if(tile != null && tile) {
                     detectionTiles.add(new Point(col, row));
                 }
             }
@@ -138,8 +139,12 @@ public class CollisionDetectionUtilities {
      */
     public static Point roundPosition(Point point) {
         return Point.builder()
-                .x(Math.round(point.getX() * 100.0D) / 100.0D)
-                .y(Math.round(point.getY() * 100.0D) / 100.0D)
+                .x(roundToTwoDecimals(point.getX()))
+                .y(roundToTwoDecimals(point.getY()))
                 .build();
+    }
+
+    public static double roundToTwoDecimals(double x) {
+        return Math.round(x * 100.0D) / 100.0D;
     }
 }
