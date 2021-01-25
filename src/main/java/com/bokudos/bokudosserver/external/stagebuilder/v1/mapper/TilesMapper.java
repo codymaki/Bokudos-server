@@ -1,7 +1,7 @@
 package com.bokudos.bokudosserver.external.stagebuilder.v1.mapper;
 
 import com.bokudos.bokudosserver.external.stagebuilder.v1.data.RegionDTO;
-import com.bokudos.bokudosserver.external.stagebuilder.v1.data.Tiles;
+import com.bokudos.bokudosserver.external.stagebuilder.Tiles;
 
 import java.util.Arrays;
 import java.util.List;

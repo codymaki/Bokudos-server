@@ -15,6 +15,6 @@ import java.util.UUID;
 public class ServerUpdatePacket {
 
     private UUID gameId;
-    private Map<UUID, MovingObject> players;
-    private Map<UUID, MovingObject> enemies;
+    private Map<UUID, PlayerAsset> players;
+    private Map<UUID, EnemyAsset> enemies;
 }

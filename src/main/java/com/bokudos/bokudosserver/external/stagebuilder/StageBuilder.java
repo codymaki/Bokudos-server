@@ -1,7 +1,6 @@
 package com.bokudos.bokudosserver.external.stagebuilder;
 
 import com.bokudos.bokudosserver.external.stagebuilder.v1.data.RegionDTO;
-import com.bokudos.bokudosserver.external.stagebuilder.v1.data.Tiles;
 import com.bokudos.bokudosserver.external.stagebuilder.v1.mapper.TilesMapper;
 import com.bokudos.bokudosserver.external.stagebuilder.v1.service.RegionService;
 import lombok.extern.slf4j.Slf4j;

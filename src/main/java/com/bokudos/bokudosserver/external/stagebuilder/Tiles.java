@@ -1,4 +1,4 @@
-package com.bokudos.bokudosserver.external.stagebuilder.v1.data;
+package com.bokudos.bokudosserver.external.stagebuilder;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -22,18 +22,5 @@ public class Tiles {
 
     public Boolean getTile(int column, int row) {
         return data.containsKey(column) ? data.get(column).getOrDefault(row, null) : null;
-    }
-
-    public void printToConsole() {
-        for(int i = 0; i < 100; i++) {
-            StringBuilder row = new StringBuilder();
-            for(int j = 0; j< 100; j++) {
-                Boolean test = getTile(j, i);
-                row.append(test != null && test ? "X" : " ");
-            }
-            System.out.println(row);
-        }
-
-
     }
 }

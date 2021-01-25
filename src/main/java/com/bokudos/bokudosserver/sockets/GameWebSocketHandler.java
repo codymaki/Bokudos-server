@@ -3,7 +3,7 @@ package com.bokudos.bokudosserver.sockets;
 import com.bokudos.bokudosserver.dtos.GameDTO;
 import com.bokudos.bokudosserver.packets.in.PlayerUpdatePacket;
 import com.bokudos.bokudosserver.external.stagebuilder.StageBuilder;
-import com.bokudos.bokudosserver.external.stagebuilder.v1.data.Tiles;
+import com.bokudos.bokudosserver.external.stagebuilder.Tiles;
 import com.bokudos.bokudosserver.services.GamesService;
 import com.bokudos.bokudosserver.threads.GameThread;
 import com.fasterxml.jackson.databind.ObjectMapper;

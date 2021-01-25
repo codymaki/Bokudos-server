@@ -1,6 +1,6 @@
 package com.bokudos.bokudosserver.utilities;
 
-import com.bokudos.bokudosserver.external.stagebuilder.v1.data.Tiles;
+import com.bokudos.bokudosserver.external.stagebuilder.Tiles;
 import com.bokudos.bokudosserver.physics.data.Box;
 import com.bokudos.bokudosserver.physics.data.Dimensions;
 import com.bokudos.bokudosserver.physics.data.Point;
@@ -123,7 +123,7 @@ public class CollisionDetectionUtilities {
         final int left = (int) Math.floor(box.getPosition().getX());
         final int right = (int) Math.floor(box.getPosition().getX() + box.getDimensions().getWidth());
 
-        for (int row = bottom; row <= top + 1; row++) {
+        for (int row = bottom; row <= top + TILE_SIZE; row++) {
             for (int col = left; col <= right; col++) {
                 Boolean tile = tiles.getTile(col, row);
                 if(tile != null && tile) {
@@ -137,13 +137,6 @@ public class CollisionDetectionUtilities {
     /**
      * Round to 2 decimal places. This is a utility helper method that can be used to help resolve some of the precision issues with hitbox detection.
      */
-    public static Point roundPosition(Point point) {
-        return Point.builder()
-                .x(roundToTwoDecimals(point.getX()))
-                .y(roundToTwoDecimals(point.getY()))
-                .build();
-    }
-
     public static double roundToTwoDecimals(double x) {
         return Math.round(x * 100.0D) / 100.0D;
     }

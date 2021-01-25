@@ -1,7 +1,7 @@
 package com.bokudos.bokudosserver.utilities
 
 import com.bokudos.bokudosserver.categories.UnitTest
-import com.bokudos.bokudosserver.external.stagebuilder.v1.data.Tiles
+import com.bokudos.bokudosserver.external.stagebuilder.Tiles
 import com.bokudos.bokudosserver.physics.data.Box
 import com.bokudos.bokudosserver.physics.data.Dimensions
 import com.bokudos.bokudosserver.physics.data.Point
