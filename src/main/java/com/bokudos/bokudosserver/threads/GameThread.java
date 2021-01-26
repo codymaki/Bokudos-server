@@ -5,9 +5,12 @@ import com.bokudos.bokudosserver.dtos.GameDTO;
 import com.bokudos.bokudosserver.enums.AssetType;
 import com.bokudos.bokudosserver.external.stagebuilder.Tiles;
 import com.bokudos.bokudosserver.packets.in.PlayerUpdatePacket;
+import com.bokudos.bokudosserver.packets.out.Animation;
 import com.bokudos.bokudosserver.packets.out.EnemyAsset;
 import com.bokudos.bokudosserver.packets.out.PlayerAsset;
 import com.bokudos.bokudosserver.packets.out.ServerUpdatePacket;
+import com.bokudos.bokudosserver.packets.out.enums.Direction;
+import com.bokudos.bokudosserver.packets.out.enums.Movement;
 import com.bokudos.bokudosserver.physics.EnemyPhysics;
 import com.bokudos.bokudosserver.physics.PhysicsSettings;
 import com.bokudos.bokudosserver.physics.PlayerPhysics;
@@ -71,7 +74,6 @@ public class GameThread extends Thread {
         long timer = System.currentTimeMillis();
 
         initEnemies();
-        initNewPlayer();
         long enemySpawnRate = 500; // testing enemy spawn every 500ms
         long lastEnemySpawn = timer;
         long maxEnemies = 100;
@@ -79,11 +81,12 @@ public class GameThread extends Thread {
         while (running) {
             long time = System.currentTimeMillis();
             // uncomment this code to test a bunch of enemies being spawned and moving across the map
-//            if(time - lastEnemySpawn > enemySpawnRate && this.enemies.size() < maxEnemies) {
-//                initEnemies();
-//                lastEnemySpawn = time;
-//            }
+//            if (time - lastEnemySpawn > enemySpawnRate && this.enemies.size() < maxEnemies) {
+////                initEnemies();
+////                lastEnemySpawn = time;
+////            }
             if (time - timer > this.physicsSettings.getMsPerTick()) {
+                initPlayers();
                 Map<UUID, PlayerUpdatePacket> packets = this.popPlayerPackets();
                 ServerUpdatePacket serverUpdatePacket = this.tickServer(packets);
                 final String serverPacket = writeToJSON(serverUpdatePacket);
@@ -100,7 +103,7 @@ public class GameThread extends Thread {
                 timer += this.physicsSettings.getMsPerTick();
 
                 long processingTime = System.currentTimeMillis() - time;
-                if(processingTime > this.physicsSettings.getMsPerTick()) {
+                if (processingTime > this.physicsSettings.getMsPerTick()) {
                     log.warn("Server slowdown, time for processing one tick: " + processingTime);
                     double newTickRate = Math.max(this.physicsSettings.getTickRate() - ServerConfigurationConstants.SERVER_TICK_RATE_INTERVAL, ServerConfigurationConstants.MIN_SERVER_TICK_RATE);
                     log.warn("Decreasing Tick Rate from " + this.physicsSettings.getTickRate() + " to " + newTickRate);
@@ -122,14 +125,26 @@ public class GameThread extends Thread {
     /**
      * Initialize new players with random starting location.
      */
-    private void initNewPlayer() {
-        PlayerAsset playerAsset = PlayerAsset.builder().build();
-        this.players.put(UUID.randomUUID(), playerAsset);
-
+    private void initPlayers() {
+        playerUpdatePacketMap.forEach(
+                (k, v) -> {
+                    if (!this.players.containsKey(k)) {
+                        PlayerAsset playerAsset = PlayerAsset.builder()
+                                .x(17) // .x(Math.random() * 50.0D + 20.0D)
+                                .y(9) // .y(50.0D)
+                                .height(2)
+                                .width(1)
+                                .animation(new Animation(Direction.RIGHT, Movement.IDLE, null, 0, 0))
+                                .build();
+                        this.players.put(k, playerAsset);
+                    }
+                }
+        );
     }
 
     /**
      * Create a JSON string from the server packet with all consolidated game assets.
+     *
      * @param serverUpdatePacket server packet with game assets
      * @return server packet as a JSON string
      */
@@ -144,6 +159,7 @@ public class GameThread extends Thread {
 
     /**
      * Tick server and do all necessary updates to player and enemy positions.
+     *
      * @param packets map of packets received from the players to indicate which actions they are attempting
      * @return consolidated packet of all game assets to be sent to clients
      */
@@ -162,8 +178,9 @@ public class GameThread extends Thread {
      * Pops player packets from the stack. Consolidates packets into a map of one packet per user. The latest packet is used.
      * Packets are only sent from the client when something changes, so we do not want to remove the previous packet
      * that each user sent, and we still want to use that same packet for further processing.
-     *
+     * <p>
      * This strategy will likely have to change in the future.
+     *
      * @return map of user ids to packets
      */
     private Map<UUID, PlayerUpdatePacket> popPlayerPackets() {

@@ -23,4 +23,7 @@ public class PhysicsConstants {
     public static final double DEFAULT_MOVEMENT_SPEED = 15.0D;
     public static final double DEFAULT_MOVEMENT_ACCELERATION = 1.2D;
 
+    public static final int FRAMES_PER_ANIMATION = 10;
+    public static final int FRAME_DELAY = 4;
+
 }
