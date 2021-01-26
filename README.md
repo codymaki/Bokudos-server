@@ -1,5 +1,8 @@
 # Bokudos-server
 
+## Parent for this module
+[Bokudos](https://github.com/BadassBison/Bokudos.git)
+
 This is the backend game server for the 2D game "Bokudos".
 
 This project is containerized using Docker.
