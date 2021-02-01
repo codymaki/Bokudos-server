@@ -1,4 +1,4 @@
-package com.bokudos.bokudosserver.physics;
+package com.bokudos.bokudosserver.physics.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class Velocity {
-    private double dx;
-    private double dy;
+public class Dimensions {
+    private double width;
+    private double height;
 }

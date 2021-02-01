@@ -1,7 +1,7 @@
 package com.bokudos.bokudosserver.external.stagebuilder.v1.mapper;
 
 import com.bokudos.bokudosserver.external.stagebuilder.v1.data.RegionDTO;
-import com.bokudos.bokudosserver.external.stagebuilder.v1.data.Tiles;
+import com.bokudos.bokudosserver.external.stagebuilder.Tiles;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +26,7 @@ public class TilesMapper {
                 for(int c = 0; c < columns.length; c++) {
                     int column = startC + c;
                     if(!EMPTY_TILE_VALUES.contains(columns[c])) {
-                        tiles.setTile(column, row, true);
+                        tiles.setTile(column, ROWS_PER_REGION - row-1, true);
                     }
                 }
             }

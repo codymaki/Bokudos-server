@@ -1,4 +1,4 @@
-package com.bokudos.bokudosserver.physics;
+package com.bokudos.bokudosserver.physics.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class Box {
-    private Point position;
-    private Dimensions dimensions;
+public class Point {
+    private double x;
+    private double y;
 }

@@ -1,9 +1,9 @@
 package com.bokudos.bokudosserver.sockets;
 
 import com.bokudos.bokudosserver.dtos.GameDTO;
-import com.bokudos.bokudosserver.dtos.PlayerPacketDTO;
+import com.bokudos.bokudosserver.packets.in.PlayerUpdatePacket;
 import com.bokudos.bokudosserver.external.stagebuilder.StageBuilder;
-import com.bokudos.bokudosserver.external.stagebuilder.v1.data.Tiles;
+import com.bokudos.bokudosserver.external.stagebuilder.Tiles;
 import com.bokudos.bokudosserver.services.GamesService;
 import com.bokudos.bokudosserver.threads.GameThread;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +31,7 @@ public class GameWebSocketHandler extends AbstractWebSocketHandler {
 
     private final Map<UUID, List<WebSocketSession>> webSocketSessions = new ConcurrentHashMap<>();
     private final Map<UUID, GameThread> gameThreadMap = new ConcurrentHashMap<>();
-    private final Map<UUID, BlockingQueue<PlayerPacketDTO>> packetQueueMap = new ConcurrentHashMap<>();
+    private final Map<UUID, BlockingQueue<PlayerUpdatePacket>> packetQueueMap = new ConcurrentHashMap<>();
 
     @Autowired
     ObjectMapper objectMapper;
@@ -47,8 +47,8 @@ public class GameWebSocketHandler extends AbstractWebSocketHandler {
         return UUID.fromString(gameId);
     }
 
-    private BlockingQueue<PlayerPacketDTO> getPlayerPacketQueue(UUID gameId) {
-        BlockingQueue<PlayerPacketDTO> queue = packetQueueMap.get(gameId);
+    private BlockingQueue<PlayerUpdatePacket> getPlayerPacketQueue(UUID gameId) {
+        BlockingQueue<PlayerUpdatePacket> queue = packetQueueMap.get(gameId);
         if (queue == null) {
             queue = new ArrayBlockingQueue<>(DEFAULT_QUEUE_SIZE);
             packetQueueMap.put(gameId, queue);
@@ -64,7 +64,7 @@ public class GameWebSocketHandler extends AbstractWebSocketHandler {
         addGameSession(gameId, session);
         if (!gameThreadMap.containsKey(gameId)) {
             GameDTO gameDTO = gamesService.getGameDTOById(gameId);
-            BlockingQueue<PlayerPacketDTO> packetQueue = getPlayerPacketQueue(gameId);
+            BlockingQueue<PlayerUpdatePacket> packetQueue = getPlayerPacketQueue(gameId);
             Tiles tiles = stageBuilder.getTiles(gameDTO.getStageId());
             GameThread gameThread = new GameThread(gameDTO, packetQueue, webSocketSessions.get(gameId), tiles);
             gameThreadMap.put(gameId, gameThread);
@@ -83,11 +83,11 @@ public class GameWebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        PlayerPacketDTO playerPacketDTO = objectMapper.readValue(message.getPayload(), PlayerPacketDTO.class);
-        log.debug("Message received: " + playerPacketDTO);
+        PlayerUpdatePacket playerUpdatePacket = objectMapper.readValue(message.getPayload(), PlayerUpdatePacket.class);
+        log.debug("Message received: " + playerUpdatePacket);
 
         UUID gameId = getGameIdFromURI(session.getUri());
-        getPlayerPacketQueue(gameId).add(playerPacketDTO);
+        getPlayerPacketQueue(gameId).add(playerUpdatePacket);
     }
 
     @Override
