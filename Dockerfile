@@ -8,4 +8,5 @@ RUN mvn package -f /tmp/pom.xml
 FROM openjdk:15.0.1-jdk
 ARG JAR_FILE=target/*.jar
 COPY --from=MAVEN_TOOL_CHAIN /tmp/target/*.jar gameServer.jar
+EXPOSE 8082
 ENTRYPOINT ["java","-jar","/gameServer.jar"]
