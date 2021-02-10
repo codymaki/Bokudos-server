@@ -1,17 +1,20 @@
-package com.bokudos.bokudosserver.dtos;
+package com.bokudos.bokudosserver.packets.out;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class GamePacketDTO {
+public class ServerUpdatePacket {
 
     private UUID gameId;
+    private Map<UUID, PlayerAsset> players;
+    private Map<UUID, EnemyAsset> enemies;
 }

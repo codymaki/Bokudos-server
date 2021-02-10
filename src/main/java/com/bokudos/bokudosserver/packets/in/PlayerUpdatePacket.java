@@ -1,4 +1,4 @@
-package com.bokudos.bokudosserver.dtos;
+package com.bokudos.bokudosserver.packets.in;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Builder
-public class PlayerPacketDTO {
+public class PlayerUpdatePacket {
 
     private UUID playerId;
+    private PlayerKeys keys;
 }

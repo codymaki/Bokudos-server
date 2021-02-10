@@ -3,8 +3,6 @@ package com.bokudos.bokudosserver.services;
 import com.bokudos.bokudosserver.dtos.PlayerDTO;
 import com.bokudos.bokudosserver.entities.Game;
 import com.bokudos.bokudosserver.entities.Player;
-import com.bokudos.bokudosserver.enums.GameStatus;
-import com.bokudos.bokudosserver.exceptions.InvalidGameStatusException;
 import com.bokudos.bokudosserver.exceptions.PlayerNotFoundException;
 import com.bokudos.bokudosserver.mappers.PlayerMapper;
 import com.bokudos.bokudosserver.repositories.PlayersRepository;
@@ -51,9 +49,7 @@ public class PlayersService {
 
     private PlayerDTO savePlayer(UUID gameId, PlayerDTO playerDTO) {
         Game game = gamesService.getGameById(gameId);
-        if(game.getGameStatus() != GameStatus.CREATING) {
-            throw new InvalidGameStatusException();
-        }
+        gamesService.validateGameStatusOpen(game.getGameStatus());
         Player player = PlayerMapper.mapFromDTO(playerDTO);
         player.setGame(game);
         return PlayerMapper.mapToDTO(playersRepository.save(player));

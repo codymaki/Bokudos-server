@@ -33,4 +33,6 @@ public class Game {
     @Enumerated(EnumType.STRING)
     private GameStatus gameStatus;
 
+    @NonNull
+    private int stageId;
 }

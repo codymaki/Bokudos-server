@@ -31,3 +31,5 @@ api:
   url:
     games:
       v1: http://localhost:${server.port}/api/v1/games
+stagebuilder:
+  url: http://localhost:8081/
