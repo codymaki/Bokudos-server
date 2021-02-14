@@ -12,6 +12,8 @@ public class PhysicsSettings {
     private double msPerTick;
     private double gravityAcceleration;
     private double terminalVelocity;
+    private double glidingVelocity;
+    private double glidingVelocityMultiplier;
     private double tickRate;
     private double jumpSpeed;
     private double movementSpeed;
@@ -22,6 +24,8 @@ public class PhysicsSettings {
         this.msPerTick = 1000 / tickRate;
         this.gravityAcceleration = PhysicsConstants.ACCELERATION_FROM_GRAVITY / tickRate;
         this.terminalVelocity = PhysicsConstants.STANDARD_TERMINAL_VELOCITY / tickRate;
+        this.glidingVelocity = PhysicsConstants.STANDARD_GLIDING_VELOCITY / tickRate;
+        this.glidingVelocityMultiplier = PhysicsConstants.STANDARD_GLIDING_MULTIPLIER;
         this.jumpSpeed = PhysicsConstants.DEFAULT_JUMP_SPEED / tickRate;
         this.movementSpeed = PhysicsConstants.DEFAULT_MOVEMENT_SPEED / tickRate;
         this.movementAcceleration = PhysicsConstants.DEFAULT_MOVEMENT_ACCELERATION / tickRate;

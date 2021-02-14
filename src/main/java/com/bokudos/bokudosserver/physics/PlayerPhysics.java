@@ -22,6 +22,7 @@ public class PlayerPhysics {
         boolean left = (packet != null && packet.getKeys() != null) && packet.getKeys().isLeft();
         boolean right = (packet != null && packet.getKeys() != null) && packet.getKeys().isRight();
         boolean attack = (packet != null && packet.getKeys() != null) && packet.getKeys().isAttack();
+        boolean glide = (packet != null && packet.getKeys() != null) && packet.getKeys().isGlide();
 
         Velocity perTickVelocity = new Velocity(gameAsset.getDx() / settings.getTickRate(), gameAsset.getDy() / settings.getTickRate());
 
@@ -34,12 +35,17 @@ public class PlayerPhysics {
             boolean movingRight = perTickVelocity.getDx() > 0.0D;
             double speed = right != movingRight && perTickVelocity.getDx() != 0 ? 0 : perTickVelocity.getDx()
                     + (right ? settings.getMovementAcceleration() : -settings.getMovementAcceleration());
+            double maxSpeed = settings.getMovementSpeed() * (glide ? settings.getGlidingVelocityMultiplier() : 1.0D);
             perTickVelocity.setDx(
-                    speed < 0 ? Math.max(speed, -settings.getMovementSpeed())
-                            : Math.min(speed, settings.getMovementSpeed()));
+                    speed < 0 ? Math.max(speed, -maxSpeed)
+                            : Math.min(speed, maxSpeed));
         }
-        if (perTickVelocity.getDy() > -settings.getTerminalVelocity()) {
-            perTickVelocity.setDy(perTickVelocity.getDy() - settings.getGravityAcceleration());
+        if(glide) {
+            perTickVelocity.setDy(-settings.getGlidingVelocity());
+        } else {
+            if (perTickVelocity.getDy() > -settings.getTerminalVelocity()) {
+                perTickVelocity.setDy(perTickVelocity.getDy() - settings.getGravityAcceleration());
+            }
         }
 
         Box box = Box.builder()
@@ -62,6 +68,7 @@ public class PlayerPhysics {
         // To remove repetitive jumping when key is held
         updatedAsset.setJumpUsed(up);
         updatedAsset.setJumping(updatedVelocity.getDy() != 0.0D);
+        updatedAsset.setGliding(updatedVelocity.getDy() < 0 && glide);
         updatedAsset.setWidth(gameAsset.getWidth());
         updatedAsset.setHeight(gameAsset.getHeight());
         updatedAsset.setAnimation(getAnimation(gameAsset, attack));
@@ -82,7 +89,8 @@ public class PlayerPhysics {
                 && currentAnimation.getFrame() < PhysicsConstants.FRAMES_PER_ANIMATION - 1) ? Action.ATTACK : null;
         Animation animation = Animation.builder()
                 .action(action)
-                .movement(playerAsset.getDy() != 0.0D ? Movement.JUMP
+                .movement(playerAsset.isGliding() ? Movement.GLIDE :
+                        playerAsset.getDy() != 0.0D ? Movement.JUMP
                         : (playerAsset.getDx() == 0.0D ? Movement.IDLE : Movement.RUN))
                 .direction(playerAsset.getDx() == 0.0D ? currentAnimation.getDirection()
                         : (playerAsset.getDx() > 0.0D ? Direction.RIGHT : Direction.LEFT))

@@ -7,6 +7,7 @@ import com.bokudos.bokudosserver.exceptions.GameNotFoundException;
 import com.bokudos.bokudosserver.exceptions.InvalidGameStatusException;
 import com.bokudos.bokudosserver.mappers.GameMapper;
 import com.bokudos.bokudosserver.repositories.GamesRepository;
+import com.bokudos.bokudosserver.repositories.PlayersRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class GamesService {
 
     @Autowired
     private GamesRepository gamesRepository;
+
+    @Autowired
+    private PlayersRepository playersRepository;
 
     public List<GameDTO> getGameDTOs() {
         return StreamSupport
@@ -58,6 +62,7 @@ public class GamesService {
         Game game = gamesRepository.findById(gameId)
                 .orElseThrow(GameNotFoundException::new);
         validateGameStatusOpen(game.getGameStatus());
+        playersRepository.deleteAll(playersRepository.findAllByGame(game));
         gamesRepository.delete(game);
     }
 

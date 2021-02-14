@@ -15,4 +15,5 @@ public class PlayerKeys {
     private boolean left;
     private boolean right;
     private boolean attack;
+    private boolean glide;
 }
