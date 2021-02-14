@@ -100,6 +100,7 @@ public class GameWebSocketHandler extends AbstractWebSocketHandler {
             gameThreadMap.remove(gameId);
             webSocketSessions.remove(gameId);
             packetQueueMap.remove(gameId);
+            gamesService.deleteGame(gameId);
         }
     }
 }

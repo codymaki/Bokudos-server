@@ -19,6 +19,7 @@ public class PlayerAsset {
     private AssetType assetType = AssetType.PLAYER;
     private boolean jumping;
     private boolean jumpUsed;
+    private boolean gliding;
     private Animation animation;
 
     private double x;
