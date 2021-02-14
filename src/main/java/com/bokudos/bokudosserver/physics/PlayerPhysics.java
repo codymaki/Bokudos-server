@@ -22,7 +22,8 @@ public class PlayerPhysics {
         boolean left = (packet != null && packet.getKeys() != null) && packet.getKeys().isLeft();
         boolean right = (packet != null && packet.getKeys() != null) && packet.getKeys().isRight();
         boolean attack = (packet != null && packet.getKeys() != null) && packet.getKeys().isAttack();
-        boolean glide = (packet != null && packet.getKeys() != null) && packet.getKeys().isGlide();
+        boolean glide = (packet != null && packet.getKeys() != null) && packet.getKeys().isGlide()
+                && !Action.ATTACK.equals(gameAsset.getAnimation().getAction());
 
         Velocity perTickVelocity = new Velocity(gameAsset.getDx() / settings.getTickRate(), gameAsset.getDy() / settings.getTickRate());
 
@@ -40,7 +41,7 @@ public class PlayerPhysics {
                     speed < 0 ? Math.max(speed, -maxSpeed)
                             : Math.min(speed, maxSpeed));
         }
-        if(glide) {
+        if (glide) {
             perTickVelocity.setDy(-settings.getGlidingVelocity());
         } else {
             if (perTickVelocity.getDy() > -settings.getTerminalVelocity()) {
@@ -89,9 +90,10 @@ public class PlayerPhysics {
                 && currentAnimation.getFrame() < PhysicsConstants.FRAMES_PER_ANIMATION - 1) ? Action.ATTACK : null;
         Animation animation = Animation.builder()
                 .action(action)
-                .movement(playerAsset.isGliding() ? Movement.GLIDE :
-                        playerAsset.getDy() != 0.0D ? Movement.JUMP
-                        : (playerAsset.getDx() == 0.0D ? Movement.IDLE : Movement.RUN))
+                .movement(playerAsset.isGliding() ? Movement.GLIDE
+                        : playerAsset.isJumping() ? Movement.JUMP
+                        : playerAsset.getDx() == 0.0D ? Movement.IDLE
+                        : Movement.RUN)
                 .direction(playerAsset.getDx() == 0.0D ? currentAnimation.getDirection()
                         : (playerAsset.getDx() > 0.0D ? Direction.RIGHT : Direction.LEFT))
                 .build();
