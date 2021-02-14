@@ -1,6 +1,8 @@
 spring:
   profiles:
-    active: local
+    active: ${SPRING_PROFILES:local}
+stagebuilder:
+  url: ${STAGEBUILDER_URL:http://localhost:8081/}
 
 ---
 server:
@@ -24,12 +26,7 @@ spring:
     h2:
       console:
         enabled: true
-  config:
-    activate:
-      on-profile: local
 api:
   url:
     games:
       v1: http://localhost:${server.port}/api/v1/games
-stagebuilder:
-  url: http://localhost:8081/
