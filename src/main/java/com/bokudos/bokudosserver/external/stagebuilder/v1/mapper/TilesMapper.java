@@ -22,11 +22,11 @@ public class TilesMapper {
             final int startC = regionDTO.getColumn() * COLUMNS_PER_REGION;
             for(int r = 0; r < rows.length; r++) {
                 String[] columns = rows[r].split(COLUMN_SPLITTER);
-                int row = startR + r;
+                int row = startR + ROWS_PER_REGION - r -1;
                 for(int c = 0; c < columns.length; c++) {
                     int column = startC + c;
                     if(!EMPTY_TILE_VALUES.contains(columns[c])) {
-                        tiles.setTile(column, ROWS_PER_REGION - row-1, true);
+                        tiles.setTile(column, row, true);
                     }
                 }
             }

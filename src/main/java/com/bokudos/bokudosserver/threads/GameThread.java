@@ -132,7 +132,7 @@ public class GameThread extends Thread {
                     if (!this.players.containsKey(k)) {
                         PlayerAsset playerAsset = PlayerAsset.builder()
                                 .x(18) // .x(Math.random() * 30.0D + 20.0D) // (20 - 50) // .x(17)
-                                .y(80.0D) // (80) // .y(9)
+                                .y(280.0D) // (80) // .y(9)
                                 .height(2)
                                 .width(1)
                                 .animation(new Animation(Direction.RIGHT, Movement.GLIDE, null, 0, 0))
